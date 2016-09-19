@@ -30,6 +30,6 @@
   },
   "scripts": {
     "start": "node index.js",
-    "postinstall": "gulp default"
+    "heroku-postbuild": "gulp"
   }
 }

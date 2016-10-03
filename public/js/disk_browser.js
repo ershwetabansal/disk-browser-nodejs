@@ -30,6 +30,7 @@ browser.setup({
     },
     files: {
         list: '/disk/files',
+        destroy : '/disk/file/destroy',
         upload: {
             url: '/disk/file/store',
             params:[]

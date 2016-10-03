@@ -88,6 +88,41 @@ app.post('/disk/directory/store', function(request, response){
   response.end();
 });
 
+app.post('/disk/directory/destroy', function(request, response) {
+  var data = request.body;
+  var dir = disks[data.disk].path() + data.path + (data.path.endsWith('/') ? '' : '/') + data.name;
+
+  var success = true;
+  try {
+    fs.rmdirSync(dir);  
+  } catch (e) {
+    success = false;
+  }
+
+  response.writeHead(200, "OK", {'Content-Type': 'application/json'});
+  response.write(JSON.stringify({success : success}));
+  response.end(); 
+
+});
+
+app.post('/disk/file/destroy', function(request, response) {
+  var data = request.body;
+  var file = disks[data.disk].path() + data.path + (data.path.endsWith('/') ? '' : '/') + data.name;
+
+console.log(file);
+  var success = true;
+  try {
+    fs.unlink(file);  
+  } catch (e) {
+    success = false;
+    console.log(e);
+  }
+
+  response.writeHead(200, "OK", {'Content-Type': 'application/json'});
+  response.write(JSON.stringify({success : success}));
+  response.end(); 
+});
+
 app.post('/disk/file/store', function(request, response) {
   var stats = fs.statSync(request.files.file.file);
   var data = request.body;

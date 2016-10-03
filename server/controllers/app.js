@@ -38,7 +38,6 @@ exports.startServer = function() {
 bb.extend(app, {
   upload: true,
 });
-console.log(__dirname);
 app.set('port', process.env.PORT || 3000);
 app.engine('.html', require('ejs').__express);
 app.set('views', path.join(__dirname, '../../public'));

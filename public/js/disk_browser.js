@@ -7,7 +7,19 @@ browser.setup({
         details : [
             {
                 name: 'assets',
-                label: 'Website assets'
+                label: 'Images',
+                allowed_extensions: ['png','jpg','jpeg','bmp','tiff','gif']
+            },
+            {
+                name: 'assets',
+                label: 'Documents',
+                allowed_extensions: ['doc','docx','pdf','xls','xlsx']
+            },
+            {
+                name: 'assets',
+                label: 'Cats',
+                allowed_directories: ['/cats'],
+                read_only: true
             }
         ]
     },
@@ -53,6 +65,9 @@ browser.setup({
 function tinmyceDiskBrowser(field_id, url, type, win)
 {
     browser.openBrowser({
+        disks : [
+            'Images', 'Documents'
+        ],
         button : {
             text : 'Update URL',
             onClick : function(path) {
@@ -62,14 +77,34 @@ function tinmyceDiskBrowser(field_id, url, type, win)
     });
 }
 
-function accessBrowser(callback)
+function accessBrowser(callback, disks)
 {
-    browser.openBrowser({
+    var configParameters = {
         button : {
             text : 'Update URL',
             onClick : function(path) {
                 if (callback) callback(path);
             }
         }
-    });
+    };
+
+    if (disks) {
+        configParameters.disks = getArrayFromCSV(disks);
+    }
+
+    browser.openBrowser(configParameters);
+}
+
+function getArrayFromCSV(csv)
+{
+    // Return empty array if csv is not defined
+    if (!csv) {
+        return [];
+    }
+
+    if (csv.indexOf(',')) {
+        return csv.split(',');
+    }
+
+    return [csv];
 }

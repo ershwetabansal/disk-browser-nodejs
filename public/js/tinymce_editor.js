@@ -1,6 +1,5 @@
 tinymce.init({
-        selector: 'div.editable.inline-active',
-        inline: true,
+        selector: 'textarea',
         paste_as_text: true,
         plugins: [
             "advlist autolink link image imagetools lists anchor code fullscreen table template paste"

@@ -109,13 +109,11 @@ app.post('/disk/file/destroy', function(request, response) {
   var data = request.body;
   var file = disks[data.disk].path() + data.path + (data.path.endsWith('/') ? '' : '/') + data.name;
 
-console.log(file);
   var success = true;
   try {
     fs.unlink(file);  
   } catch (e) {
     success = false;
-    console.log(e);
   }
 
   response.writeHead(200, "OK", {'Content-Type': 'application/json'});
@@ -132,7 +130,7 @@ app.post('/disk/file/store', function(request, response) {
     modified_at : stats.mtime
   };
 
-  var newPath = disks[data.disk].path() + data.path + request.files.file.filename;
+  var newPath = disks[data.disk].path() + (data.path.endsWith('/') ? '' : '/') + request.files.file.filename;
 
   fs.readFile(request.files.file.file, function (err, data) {
     fs.writeFile(newPath, data, function (err) {
@@ -143,6 +141,46 @@ app.post('/disk/file/store', function(request, response) {
   response.write(JSON.stringify(file));
   response.end();
 });
+
+app.post('/disk/search', function(request, response) {
+  var data = request.body;
+  var path = disks[data.disk].path();
+
+  var files = getAllFiles(path, data.search);
+  console.log(files);
+  response.writeHead(200, "OK", {'Content-Type': 'application/json'});
+  response.write(JSON.stringify({files : files}));
+  response.end();
+});
+
+function getAllFiles(stringPath, match) {
+  var fileJSON = [];
+  var files = fs.readdirSync(stringPath);
+  files.forEach(function(fileName) {
+    var stats = fs.statSync(stringPath + "/" + fileName);
+    if (stats.isFile() && fileName.toLowerCase().indexOf(match) != -1) {
+      var publicResourcesPath = path.join(__dirname, '../../public');
+      console.log(publicResourcesPath);
+      var file = { 
+          name : fileName, 
+          size : stats.size,
+          modified_at : stats.mtime,
+          path : stringPath.substring(publicResourcesPath.length)
+      };
+      fileJSON.push(file);      
+    } else if(stats.isDirectory()) {
+      var subDirectoryFiles = getAllFiles(stringPath + '/' + fileName, match);
+      if (subDirectoryFiles.length > 0) {
+        subDirectoryFiles.forEach(function(file) {
+            fileJSON.push(file);
+        });
+      }
+    }
+  });
+
+  return fileJSON;
+
+}
 
 function getFiles(path) {
   var fileJSON = [];

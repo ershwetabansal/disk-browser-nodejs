@@ -16,7 +16,7 @@ tinymce.init({
               text: 'Disk Browser',
               icon: false,
               onclick: function () {
-                accessBrowser(function(url) {
+                accessDiskBrowser(function(url) {
                     editor.insertContent('<img src="'+url+'"/>');
                 });
               }

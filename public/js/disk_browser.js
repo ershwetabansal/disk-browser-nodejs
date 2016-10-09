@@ -130,14 +130,12 @@ function accessDiskBrowser(callback, disks)
 {
     var configParameters = {};
 
-    if (buttonText && callback)  {
-        configParameters.button  = {
+    configParameters.button  = {
             text : 'Update',
             onClick : function(path) {
                 if (callback) callback(path);
             }
-        }        
-    };
+        };
 
     if (disks) {
         configParameters.disks = getArrayFromCSV(disks);

@@ -21,9 +21,9 @@
         text-decoration: underline;
         color: #337ab7;
     }
-    .nav > li {
+    /*.nav > li {
         float: left;
-    }
+    }*/
     .navbar {
         padding: 8px 0;
     }
@@ -36,13 +36,37 @@
     .navbar-inverse a:hover, .navbar-inverse a:focus{
         color: #24334e;
     }
+    .navigation-cover {
+        padding: 20px;
+        border: 1px solid #ccc;
+        background: #eaf1fd;
+    }
+    .list-details {
+        padding-left: 15px;
+    }
+    .list-details li{
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #ccc;
+    }
+    .btn-success {
+        color: #fff;
+        background-color: #3b3e67;
+        border-color: #0b1667;
+    }
+
+    .btn-success:hover {
+        color: #fff;
+        background-color: #040363;
+        border-color: #02066d;   
+    }
     </style>
 </head>
 <body>
 <div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
-        <ul class="nav">
+        <ul class="nav nav-pills">
           <li class="">
             <a href="/">Disk browser</a>
           </li>
@@ -59,18 +83,17 @@
       </div>
   </div>
 </div>
-    <div class="col-md-12" style="margin-top: 50px;">
-
-        <h1>Disk Browser Demo</h1>
-
-        <ul class="nav nav-pills">
-          <li role="presentation" class="active"><a data-toggle="tab" href="#stand-alone">Stand alone</a></li>
+<div style="margin-top: 80px;">
+    <div class="col-md-3 navigation-cover">
+        <ul class="nav nav-pills nav-stacked">
+          <li role="presentation" class="active"><a data-toggle="tab" href="#stand-alone">Disk browser as stand alone</a></li>
           <li role="presentation"><a data-toggle="tab" href="#tiny-mce">TinyMCE</a></li>
         </ul>
-
+    </div>
+    <div class="col-md-9">
         <div class="tab-content">
             <div class="tab-pane fade in active" id="stand-alone">
-                <ul>
+                <ul class="list-unstyled list-details">
                     <li>
                         <p>Browse multiple disks</p>
                         <button class="btn btn-success" data-disk-browser="true">Browse</button>
@@ -93,7 +116,7 @@
                     </li>
                     <li>
                         <p>Update source of an image from image only disk</p>
-                        <button class="btn btn-success" data-disk-browser="true" data-update-image="image_to_update" data-disk-browser-btn="Update Image">Update this image</button><br/>
+                        <button class="btn btn-success" data-disk-browser="true" data-update-image="image_to_update" data-disk-browser-btn="Update Image" data-disks="Read only">Update this image</button><br/>
                         <img src="/assets/cats/Kittens/Three Kittens.jpeg" alt="" height="300" data-type="image_to_update"/>
                     </li>
                 </ul>
@@ -101,8 +124,9 @@
             <div class="tab-pane fade" id="tiny-mce">
                 <textarea></textarea>
             </div>
-        </div>
+        </div>  
     </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
@@ -111,10 +135,9 @@
 
 
 <script src="app/build/disk-browser/js/disk-browser.js"></script>
-<script src="//cdn.tinymce.com/4/tinymce.js"></script>
-
 <script src="js/disk_browser.js"></script>
 
+<script src="//cdn.tinymce.com/4/tinymce.js"></script>
 <script src="js/tinymce_editor.js"></script>
 
 <script>

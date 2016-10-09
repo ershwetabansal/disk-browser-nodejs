@@ -8,9 +8,16 @@ var express         = require('express'),
     bb              = require('express-busboy');
 
 var disks = {
-      assets : {
+      image_disk : {
+        prefix : 'assets',
         path : function() {
           return path.join(__dirname, '../../public/assets' );
+        }
+      },
+      doc_disk : {
+        prefix : 'documents',
+        path : function() {
+          return path.join(__dirname, '../../public/documents');
         }
       }
     };
@@ -45,8 +52,16 @@ app.set('view engine', 'html');
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, '../../public')));
 
-app.get('/browser', function(req,res){
+app.get('/', function(req,res){
   res.render('index', {});
+});
+
+app.get('/demo', function(req,res){
+  res.render('demo', {});
+});
+
+app.get('/docs', function(req,res){
+  res.render('docs', {});
 });
 
 app.post('/disk/directories', function(request, response) {
@@ -71,6 +86,7 @@ app.post('/disk/directory/store', function(request, response){
   var data = request.body;
   var dir = disks[data.disk].path() + data.path + (data.path.endsWith('/') ? '' : '/') + data.name;
 
+  console.log(dir);
   if (!fs.existsSync(dir)){
     fs.mkdirSync(dir);
   }
@@ -105,6 +121,25 @@ app.post('/disk/directory/destroy', function(request, response) {
 
 });
 
+app.post('/disk/directory/update', function(request, response) {
+  var data = request.body;
+  var oldPath = disks[data.disk].path() + data.path;
+  var newPath = disks[data.disk].path() + data.path.substring(0,data.path.lastIndexOf('/') + 1) + data.new_value;
+  console.log(newPath);
+  var success = true;
+  try {
+    fs.renameSync(oldPath, newPath);  
+  } catch (e) {
+    console.log(e);
+    success = false;
+  }
+
+  response.writeHead(200, "OK", {'Content-Type': 'application/json'});
+  response.write(JSON.stringify({success : success}));
+  response.end(); 
+
+});
+
 app.post('/disk/file/destroy', function(request, response) {
   var data = request.body;
   var file = disks[data.disk].path() + data.path + (data.path.endsWith('/') ? '' : '/') + data.name;
@@ -130,7 +165,7 @@ app.post('/disk/file/store', function(request, response) {
     modified_at : stats.mtime
   };
 
-  var newPath = disks[data.disk].path() + (data.path.endsWith('/') ? '' : '/') + request.files.file.filename;
+  var newPath = disks[data.disk].path() + data.path + (data.path.endsWith('/') ? '' : '/') + request.files.file.filename;
 
   fs.readFile(request.files.file.file, function (err, data) {
     fs.writeFile(newPath, data, function (err) {

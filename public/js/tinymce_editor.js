@@ -6,21 +6,20 @@ tinymce.init({
         ],
 
         toolbar1: "bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent | undo redo",
-        toolbar2: "table link unlink | image | formatselect | code",
+        toolbar2: "table link unlink | image | formatselect | code | DiskBrowser",
         toolbar_items_size: 'small',
         menubar: false,
         paste_data_images: false,
         file_browser_callback : tinmyceDiskBrowser,
         setup : function(editor) {
-            var css = '';
-            editor.on('click', function(e) {
-
-            });
-            editor.on('focusout', function(e) {
-                $(e.target).removeAttr('style');
-                if (editor.isDirty()) {
-                    saveEditorChangesLocally($(e.target), 'rich', editor.getContent({source_view: true}));
-                }
+            editor.addButton('DiskBrowser', {
+              text: 'Disk Browser',
+              icon: false,
+              onclick: function () {
+                accessBrowser(function(url) {
+                    editor.insertContent('<img src="'+url+'"/>');
+                });
+              }
             });
         }
     });

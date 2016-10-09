@@ -6,15 +6,103 @@
     <!-- Fonts -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
 
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <!-- Styles -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
     <link href="app/build/disk-browser/css/disk-browser.css" rel="stylesheet"/>
     <link href="/app/build/css/app.css" rel="stylesheet">
+    <style>
+    body {
+            font-family: 'Roboto', sans-serif;
+    }
 
+    h1 {
+        text-decoration: underline;
+        color: #337ab7;
+    }
+    .nav > li {
+        float: left;
+    }
+    .navbar {
+        padding: 8px 0;
+    }
+    .navbar-inverse {
+        background: #24334e;
+    }
+    .navbar-inverse a {
+        color: white;
+    }
+    .navbar-inverse a:hover, .navbar-inverse a:focus{
+        color: #24334e;
+    }
+    </style>
 </head>
 <body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+        <ul class="nav">
+          <li class="">
+            <a href="/">Disk browser</a>
+          </li>
+          <li class="active">
+            <a href="/demo">Demo</a>
+          </li>
+          <li class="">
+            <a href="https://github.com/ershwetabansal/disk-browser">Git repository</a>
+          </li>
+          <li class="">
+            <a href="/docs">Installation & setup</a>
+          </li>
+        </ul>
+      </div>
+  </div>
+</div>
+    <div class="col-md-12" style="margin-top: 50px;">
 
+        <h1>Disk Browser Demo</h1>
+
+        <ul class="nav nav-pills">
+          <li role="presentation" class="active"><a data-toggle="tab" href="#stand-alone">Stand alone</a></li>
+          <li role="presentation"><a data-toggle="tab" href="#tiny-mce">TinyMCE</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="stand-alone">
+                <ul>
+                    <li>
+                        <p>Browse multiple disks</p>
+                        <button class="btn btn-success" data-disk-browser="true">Browse</button>
+                    </li>
+                    <li>
+                        <p>Browse single disk</p>
+                        <button class="btn btn-success" data-disk-browser="true" data-disks="Documents">Browse</button>
+                    </li>
+                    <li>
+                        <p>Update File path</p>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="File name" data-type="update_url">
+                        </div>
+                        <button class="btn btn-success" data-disk-browser="true"
+                        data-disk-browser-btn="Update" data-update="update_url">Update</button>
+                    </li>
+                    <li>
+                        <p>Browse read only disk</p>
+                        <button class="btn btn-success" data-disk-browser="true" data-disks="Read only">Browse</button>
+                    </li>
+                    <li>
+                        <p>Update source of an image from image only disk</p>
+                        <button class="btn btn-success" data-disk-browser="true" data-update-image="image_to_update" data-disk-browser-btn="Update Image">Update this image</button><br/>
+                        <img src="/assets/cats/Kittens/Three Kittens.jpeg" alt="" height="300" data-type="image_to_update"/>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-pane fade" id="tiny-mce">
+                <textarea></textarea>
+            </div>
+        </div>
+    </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
@@ -29,31 +117,9 @@
 
 <script src="js/tinymce_editor.js"></script>
 
-<div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <div class="text-center" style="margin-top: 70px;">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="File name" id="update_url">
-                <span class="input-group-addon" id="browser_btn" style="cursor: pointer;">Launch demo model</span>
-            </div>
-
-
-            <div style="margin:0 auto; width: 70%;margin-top: 50px;">
-
-            </div>
-        </div>
-
-    </div>
-</div>
-
-
 <script>
     (function() {
-        $('#browser_btn').on('click', function() {
-            accessBrowser(function(url) {
-                $('#update_url').val(url);
-            });
-        })
+
     })();
 </script>
 </body>

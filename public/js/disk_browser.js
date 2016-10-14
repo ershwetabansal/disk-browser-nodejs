@@ -12,7 +12,8 @@ browser.setup({
                 path: {
                     root: '/assets/cats/Kittens'
                 },
-                root_read_only: true
+                root_read_only: true,
+                allowed_extensions: ['png','jpg','jpeg','bmp','tiff','gif']
             },
             {
                 name: 'image_disk',

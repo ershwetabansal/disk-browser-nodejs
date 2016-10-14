@@ -1,5 +1,5 @@
 tinymce.init({
-        selector: 'textarea',
+        selector: 'textarea#tinyMCE',
         paste_as_text: true,
         plugins: [
             "advlist autolink link image imagetools lists anchor code fullscreen table template paste"
@@ -16,8 +16,16 @@ tinymce.init({
               text: 'Disk Browser',
               icon: false,
               onclick: function () {
-                accessDiskBrowser(function(url) {
-                    editor.insertContent('<img src="'+url+'"/>');
+                browser.openBrowser({
+                    disks : [
+                        'Images', 'Documents'
+                    ],
+                    button : {
+                        text : 'Update URL',
+                        onClick : function(url) {
+                            editor.insertContent('<img src="'+url+'"/>');
+                        }
+                    }
                 });
               }
             });

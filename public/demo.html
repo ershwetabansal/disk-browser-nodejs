@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Disk browser</title>
+    <meta name="viewport" content="initial-scale = 1.0" />
+
+    <!-- Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <!-- Styles -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+    <link href="app/build/disk-browser/css/disk-browser.css" rel="stylesheet"/>
+    <link href="/app/build/css/app.css" rel="stylesheet">
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+        <ul class="nav nav-pills">
+          <li class="">
+            <a href="/">Disk browser</a>
+          </li>
+          <li class="active">
+            <a href="/demo">Demo</a>
+          </li>
+          <li class="">
+            <a href="https://github.com/ershwetabansal/disk-browser" target="_blank">Fork on Git</a>
+          </li>
+          <li class="">
+            <a href="/docs">Documentation</a>
+          </li>
+        </ul>
+      </div>
+  </div>
+</div>
+<div class="content-container">
+    <div class="col-md-3 navigation-cover">
+        <ul class="nav nav-pills nav-stacked">
+          <li role="presentation" class="active"><a data-toggle="tab" href="#stand-alone">Disk browser as stand alone</a></li>
+          <li role="presentation"><a data-toggle="tab" href="#tiny-mce">TinyMCE</a></li>
+          <li><a data-toggle="tab" href="#ckeditor">CKEditor</a></li>
+        </ul>
+    </div>
+    <div class="col-md-9">
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="stand-alone">
+                <ul class="list-unstyled list-details">
+                    <li>
+                        <p>Configure multiple disks in one place</p>
+                        <button class="btn btn-success" data-disk-browser="true" data-disks="Images,Documents">Browse</button>
+                    </li>
+                    <li>
+                        <p>Configure single disk</p>
+                        <button class="btn btn-success" data-disk-browser="true" data-disks="Images">Browse</button>
+                    </li>
+                    <li>
+                        <p>Configure one directory on a disk as stand-alone disk</p>
+                        <button class="btn btn-success" data-disk-browser="true" data-disks="Cats">Browse</button>
+                    </li>
+                    <li>
+                        <p>Update File path in an input field</p>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="File name" data-type="update_url">
+                        </div>
+                        <button class="btn btn-success" data-disk-browser="true"
+                        data-disk-browser-btn="Update" data-update="update_url">Update</button>
+                    </li>
+                    <li>
+                        <p>Browse read only disk</p>
+                        <button class="btn btn-success" data-disk-browser="true" data-disks="Read only">Browse</button>
+                    </li>
+                    <li>
+                        <p>Update source of an image from image only disk</p>
+                        <button class="btn btn-success" data-disk-browser="true" data-update-image="image_to_update" data-disk-browser-btn="Update Image" data-disks="Read only">Update this image</button><br/>
+                        <img src="/assets/cats/Kittens/Three Kittens.jpeg" alt="" height="300" data-type="image_to_update" class="update" />
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-pane fade" id="tiny-mce">
+                <textarea id="tinyMCE"></textarea>
+                <br/>
+                <br/>
+                <p>
+                    Two ways to use disk browser in tinyMCE -
+                </p>
+                <ul class="list-bullets">
+                    <li>
+                        Click on <i class="mce-ico mce-i-image"></i> icon to open tinymce image plugin.
+                        <br/>
+                        And then click on <i class="mce-ico mce-i-browse"></i> link to open disk browser. 
+                        <br/>
+                        Select an image to be added to the editor.
+                    </li> 
+                    <li>
+                        Click on custom button 'Disk browser' to open the disk browser directly.
+                    </li>
+                </ul>
+                
+            </div>
+            <div class="tab-pane fade" id="ckeditor">
+            	<form>
+		            <textarea name="demo-editor" id="editor1" rows="10" cols="80">
+		                This is my textarea to be replaced with CKEditor.
+		            </textarea>
+                    <br/>
+                    <br/>
+                    <p>
+                    Two ways to use disk browser in CKEditor -
+                    </p>
+                    <ul class="list-bullets">
+                        <li>
+                            Click on <i class="mce-ico mce-i-image"></i> icon to open ck-editor image browser.
+                            <br/>
+                            And then click on 'Browser server' link to open disk browser. 
+                            <br/>
+                            Select an image to be added to the editor.
+                        </li> 
+                        <li>
+                            Click on <img src="https://photos-3.dropbox.com/t/2/AAD2T_E1QzgZ_EdVNo6K6muojdnMOlJPOFriuapezNLiUQ/12/425864487/png/32x32/3/1476414000/0/2/disk_icon.png/EL796LUDGMEnIAIoAg/P2LCpUyqU_ZIoXTzk7yBsJJIDeEXp7HmOHjFnKyl9eA?size_mode=3&dl=0&size=1280x960" height="20"/> icon to open disk browser.
+                        </li> 
+                    </ul>
+		        </form>
+            </div>
+        </div>  
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js" ></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.js"></script>
+
+
+<script src="app/build/disk-browser/js/disk-browser.js"></script>
+<script src="js/disk_browser.js"></script>
+
+<script src="//cdn.tinymce.com/4/tinymce.js"></script>
+<script src="js/tinymce_editor.js"></script>
+
+<script src="//cdn.ckeditor.com/4.5.11/standard/ckeditor.js"></script>
+<script src="/js/ck_editor.js"></script>
+</body>
+</html>

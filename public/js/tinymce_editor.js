@@ -31,3 +31,18 @@ tinymce.init({
             });
         }
     });
+
+function tinmyceDiskBrowser(field_id, url, type, win)
+{
+    browser.openBrowser({
+        disks : [
+            'Images', 'Documents'
+        ],
+        button : {
+            text : 'Update URL',
+            onClick : function(path) {
+                win.document.getElementById(field_id).value = path;
+            }
+        }
+    });
+}

@@ -177,6 +177,26 @@ app.post('/disk/file/store', function(request, response) {
   response.end();
 });
 
+app.post('/disk/file/update', function(request, response) {
+  var data = request.body;
+  var oldPath = disks[data.disk].path() + data.path + (data.path.endsWith('/') ? '' : '/') + data.old_name;
+  var newPath = disks[data.disk].path() + data.path + (data.path.endsWith('/') ? '' : '/') + data.new_name;
+  
+  var success = true;
+  try {
+    fs.renameSync(oldPath, newPath);  
+  } catch (e) {
+    console.log(e);
+    success = false;
+  }
+
+  response.writeHead(200, "OK", {'Content-Type': 'application/json'});
+  response.write(JSON.stringify({success : success}));
+  response.end(); 
+
+});
+
+
 app.post('/disk/search', function(request, response) {
   var data = request.body;
   var path = disks[data.disk].path();

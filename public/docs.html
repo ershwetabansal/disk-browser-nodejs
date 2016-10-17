@@ -18,37 +18,587 @@
 <body>
 <div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner">
-    <div class="container">
-        <ul class="nav nav-pills">
-          <li class="">
-            <a href="/">Disk browser</a>
-          </li>
-          <li>
-            <a href="/demo">Demo</a>
-          </li>
-          <li class="">
-            <a href="https://github.com/ershwetabansal/disk-browser" target="_blank">Fork on Git</a>
-          </li>
-          <li class="active">
-            <a href="/docs">Documentation</a>
-          </li>
-        </ul>
-      </div>
+    <ul class="nav nav-pills">
+        <li class="">
+          <a href="/">Disk browser</a>
+        </li>
+        <li>
+          <a href="/demo">Demo</a>
+        </li>
+        <li class="">
+          <a href="https://github.com/ershwetabansal/disk-browser" target="_blank">Fork on Git</a>
+        </li>
+        <li class="active">
+          <a href="/docs">Documentation</a>
+        </li>
+      </ul>
   </div>
 </div>
 <div class="content-container">
-    <div class="col-md-3 navigation-cover">
-        <ul class="nav nav-pills nav-stacked">
-          <li role="presentation" class="active"><a data-toggle="tab" href="#stand-alone">Disk browser as stand alone</a></li>
-          <li role="presentation"><a data-toggle="tab" href="#tiny-mce">TinyMCE</a></li>
+    <div class="col-md-3">
+        <ul class="nav nav-pills nav-stacked navigation-cover">
+          <li role="presentation" class="active"><a data-toggle="tab" href="#installation-setup">Installation & setup</a></li>
+          <li role="presentation"><a data-toggle="tab" href="#server-side">Server side integration</a></li>
+          <li role="presentation"><a data-toggle="tab" href="#client-side">Client side configuration</a></li>
+          <li role="presentation"><a data-toggle="tab" href="#authentication">Authenticatin and security</a></li>
         </ul>
     </div>
     <div class="col-md-9">
         <div class="tab-content">
-            <div class="tab-pane fade in active" id="stand-alone">
+            <div class="tab-pane fade in active" id="installation-setup">
+                <ul class="list-bullets">
+                  <li>Include dependency in your project using either npm or bower
+                    <pre>npm install disk-browser &mdash;save&nbsp;</pre>
+                    <pre>bower install disk-browser &mdash;save</pre>
+                  </li>
+                  <li>Setup gulp to copy disk-browser folder into public folder.&nbsp;</li>
+                  <li>If using elixir, then below code can be added in gulpfile.js<br/>
+                    <code>
+                    elixir(function(mix) {<br />
+                    &nbsp;&nbsp;&nbsp;mix.copy('node_modules/disk-browser/dist', 'public/app/build/diskbrowser');<br />
+                    });
+                    </code>
+                  </li>
+                </ul>
                 
+                <ul class="list-bullets">
+                  <li>Otherwise, following task can be created in gulpfile.js<br/>
+                  <code>
+                  gulp.task('copy', function() {<br />
+                   &nbsp;&nbsp;&nbsp;return gulp.src('node_modules/disk-browser/dist/**/*')<br />
+                   &nbsp;&nbsp;&nbsp;.pipe(gulp.dest('public/app/build/disk-browser'));<br />
+                  });
+                  </code>
+                  </li>
+                </ul>
+                
+
+                <p>Do remember to replace node_modules with bower_components if using bower. Similar copy command can be used in grunt as well.</p>
+                <br/>
+                <br/>
+                <br/>
             </div>
-            <div class="tab-pane fade" id="tiny-mce">
+            <div class="tab-pane fade" id="server-side">
+                Disk browser expects REST based API support from server. 
+                Here are the details of these APIs -
+                <h2>
+                  API's required for operations on disk directories
+                </h2>
+                <ul class="list-bullets">
+                  <li>
+                    List all directories in a given path<br/>
+                    <strong>Payload -</strong><br/>
+                      <code>
+                        {
+                          path: '/',
+                          disk: 'disk1',
+                        }
+                      </code><br/>
+                      Path can be root directory or a sub-directory path<br/><br/>
+                    <strong>
+                      Response - 
+                    </strong><br/>
+                    <code>
+                      {
+                        name : '',
+                        directories : [
+                          {
+                            name : ''
+                          },
+                          {
+                            name : ''
+                          }
+                        ]
+                      }
+                    </code><br/>
+                    Directories is an array of all sub-directories in the given path (only one level).<br/><br/>
+                  </li>
+                  <li>
+                    Create new directory
+                    <br/>
+                    <strong>Payload -</strong><br/>
+                      <code>
+                        {
+                          path: '/',
+                          disk: 'disk1',
+                          name: 'New directory'
+                        }
+                      </code><br/><br/>
+                    <strong>
+                      Response - 
+                    </strong><br/>
+                    <code>
+                      {
+                        name : '',
+                      }
+                    </code><br/><br/>
+                  </li>
+                  <li>
+                    Rename an exisiting directory<br/>
+                    <strong>Payload -</strong><br/>
+                      <code>
+                        {
+                          path: '/some/directory',
+                          disk: 'disk1',
+                          new_value: 'Updated directory'
+                        }
+                      </code><br/><br/>
+                    <strong>
+                      Response - 
+                    </strong><br/>
+                    <code>
+                      {
+                        success : true,
+                      }
+                    </code><br/><br/>
+                  </li>
+                  <li>
+                    Delete a directory<br/>
+                    <strong>Payload -</strong><br/>
+                      <code>
+                        {
+                          path: '/some/directory',
+                          disk: 'disk1'
+                        }
+                      </code><br/><br/>
+                    <strong>
+                      Response - 
+                    </strong><br/>
+                    <code>
+                      {
+                        success : true,
+                      }
+                    </code><br/><br/>
+                  </li>
+                </ul>
+                <h2>
+                  APIs required for operations on files
+                </h2>
+                <ul class="list-bullets">
+                  <li>
+                    List all files in a given path<br/>
+                    <strong>Payload -</strong><br/>
+                      <code>
+                        {
+                          path: '/',
+                          disk: 'disk1'
+                        }
+                      </code><br/>
+                      Path can be root directory or a sub-directory path<br/><br/>
+                    <strong>
+                      Response - 
+                    </strong><br/>
+                    <code>
+                      {
+                        name : '',
+                        size : '',
+                        modified_at : '',
+                        path : ''
+                      }
+                    </code><br/>
+                    Path is not mandatory field if disk is on relative path to the server.<br/><br/>
+                  </li>
+                  <li>
+                    Upload new file
+                    <br/>
+                    <strong>Payload -</strong><br/>
+                      <code>
+                        {
+                          path: '/',
+                          disk: 'disk1',
+                          name: 'New directory'
+                        }
+                      </code><br/><br/>
+                    <strong>
+                      Response - 
+                    </strong><br/>
+                    <code>
+                      {
+                        name : '',
+                        size : '',
+                        modified_at : '',
+                        path : ''
+                      }
+                    </code><br/><br/>
+                  </li>
+                  <li>
+                    Rename an exisiting file<br/>
+                    <strong>Payload -</strong><br/>
+                      <code>
+                        {
+                          path: '/some/directory',
+                          disk: 'disk1',
+                          old_name: 'file1.jpg',
+                          new_name: 'file2.jpg'
+                        }
+                      </code><br/><br/>
+                    <strong>
+                      Response - 
+                    </strong><br/>
+                    <code>
+                      {
+                        success : true,
+                      }
+                    </code><br/><br/>
+                  </li>
+                  <li>
+                    Delete a file<br/>
+                    <strong>Payload -</strong><br/>
+                      <code>
+                        {
+                          path: '/some/directory',
+                          disk: 'disk1',
+                          name: 'file1.jpg'
+                        }
+                      </code><br/><br/>
+                    <strong>
+                      Response - 
+                    </strong><br/>
+                    <code>
+                      {
+                        success : true,
+                      }
+                    </code><br/><br/>
+                  </li>
+                </ul>
+                <h2>API's required for disks</h2>
+                <ul class="list-bullets">
+                  <li>
+                    Search a disk<br/>
+                    <strong>Payload -</strong><br/>
+                      <code>
+                        {
+                          disk: 'disk1'
+                        }
+                      </code><br/><br/>
+                    <strong>
+                      Response - 
+                    </strong><br/>
+                    <code>
+                      {
+                        files : [{
+                          name : '',
+                        size : '',
+                        modified_at : '',
+                        path : ''
+                        },{
+                        name : '',
+                        size : '',
+                        modified_at : '',
+                        path : ''
+                        }],
+                      }
+                    </code><br/><br/>
+                  </li>
+                </ul>
+                <p>Currently client supports only files. But it can be extended for directories support as well.</p>
+                <br/>
+                <br/>
+                <br/>
+            </div>
+            <div class="tab-pane fade" id="client-side">
+                <ul class="list-bullets">
+                  <li>
+                    <a href="#configuring-disk-browser">Configure </a>an instance of disk browser
+                  </li>
+                  <li>
+                    <a href="#accessing-disk-browser">Accessing</a> disk browser instance from different places with different configurations
+                  </li>
+                  <li>
+                    Integration with <a href="#integration-with-tinymce"> tinyMCE</a>  
+                  </li>
+                  <li>
+                    Integration with <a href="#integration-with-ckeditor">CKEditor</a> 
+                  </li>
+                </ul>
+                <h2 id="configuring-disk-browser">Configuring Disk browser</h2>
+                <p>Get an instance of disk browser.</p>
+                <div><code>var browser = FileBrowser().getInstance();</code></div>
+                <div>&nbsp;</div>
+                <div>Create a configuration object -</div>
+                <div><code>var configuration = {</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; disks : {},</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; directories : {},</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; files : {},</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; http : {}</code></div>
+                <div><code>};</code></div>
+                <div>&nbsp;</div>
+                <div>
+                <div>Setup the URLs for CRUD operations on directories (List/Create new directory/Delete existing directory/ Rename a directory).</div>
+                </div>
+                <div><code>configuration.directories = {</code></div>
+                <div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; list: '/disk/directories',</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; create: '/disk/directory/store',</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; delete: '/disk/directory/destroy',</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; update: '/disk/directory/update',</code></div>
+                </div>
+                <div><code>};</code></div>
+                <div>&nbsp;</div>
+                <div>
+                <div>Setup the URLs for CRUD operations on files&nbsp;(List/Create new file/Delete existing file/ Rename a file).&nbsp;</div>
+                <code>configuration.files = {</code></div>
+                <div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; list: '/disk/files',</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; destroy : '/disk/file/destroy',</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; upload: {</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; url: '/disk/file/store',</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; params:[]</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; },</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; update: '/disk/file/update',</code></div>
+                <div><code>};</code></div>
+                <div>
+                  While uploading a file, if you would want user to enter a name or any other parameter. It can be configured by passing - <code>params:[{name : 'name', label : 'File Name'}]</code> field to upload key.
+                </div>
+                <br/>
+                <div>
+                  <u>
+                    Note that if we do not want any of the operation to be included in disk browsers such as no delete operations. Then just do not add that configuration and it will not be available. As simple as that.
+                  </u>
+                </div>
+                <div>&nbsp;</div>
+                <div>Setup multiple disks by providing their names and labels. 'Label' is used as an indentifier and is the one which is seen by users. 'Name' is the disk name which is configured with server.
+                Add URL for search on the multiple disks. Default search in the current disk will be available if 'search' is true. -</div>
+                <code>configurations.disks = {<br/>
+                &nbsp; &nbsp; search: true,<br/>
+                &nbsp; &nbsp; search_URL: '/disks/search',<br/>
+                &nbsp; &nbsp; details : [<br/>
+                &nbsp; &nbsp; {<br/>
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name: 'disk1',<br/>
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; label: 'Some disk',<br/>
+                &nbsp; &nbsp; },<br/>
+                &nbsp; &nbsp; {<br/>
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name: 'disk2',<br/>
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; label: 'Some other disk',<br/>
+                &nbsp; &nbsp; }]<br/>
+                };</code>
+                <div>&nbsp;</div>
+                <p>There are few extra configurations available for disks</p>
+                <ul class="list-bullets">
+                  <li>
+                    A disk can be made read only with following parameter -<br/>
+                    <code>read_only: true,</code>
+                  </li>
+                  <li>
+                    A disk can be restricted to display/upload only files with a given set of extensions by adding following parameter - <br/>
+                    <code>allowed_extensions: ['png','jpg','jpeg','bmp','tiff','gif']</code>
+                  </li>
+                  <li>
+                    A directory inside disk can be treated as a stand alone disk, by providing the root directory path - <br/>
+                    <code>
+                      root_directory_path: ['/cats/Kittens'],
+                    </code>
+                  </li>
+                  <li>
+                    To access a file in disk browser, it is essential to know the path of the file. Usually, server should return path of the file. But if disk is the local disk, then there is no point in returning the full path. In this case, client will form the path using relative directory structure. To add flexibility, it is possible to add a prefix to path.  -<br/>
+                    <code>
+                      path: {<br/>
+                          root: '/assets'<br/>
+                      },
+                    </code>
+                  </li>
+                </ul>
+                <div>&nbsp;</div>
+                <div>For CSRF&nbsp;authentication,</div>
+                <div><code>configuration.http.headers =&nbsp;'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content');</code></div>
+                <div>&nbsp;</div>
+                <div>Add a callback on error from server. This allows you to display proper messages as per server configurations -</div>
+                <div><code>configuration.http.error = function(status, response) {</code>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; console.log("error :"+status);</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; var message = '';</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (status == '422') {</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; for (var key in response) {</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (typeof(response[key]) == 'object') {</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; message = message + response[key][0] + ' ';</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return (message == '') ? 'Error encountered. ' : message ;</code></div>
+                <div><code>&nbsp; &nbsp; &nbsp; &nbsp; };</code></div>
+                </div>
+                <div>&nbsp;</div>
+                <div>And finally setup the configuration on browser instance</div>
+                </div>
+                <div><code>browser.setup(configuration);</code></div>
+                <div>&nbsp;</div>
+
+                <h2 id="accessing-disk-browser">Accessing disk browser</h2>
+                <div>Use following code to open file browser.</div>
+                <code>
+                  var config = {};
+                  browser.openBrowser(config);</code>
+                <div>&nbsp;</div>
+
+                <p>Following can be the configuration parameters - </p>
+                <ul class="list-bullets">
+                  <li>
+                    If disk browser is required to update the url in image or an input field, then we need to setup a button on file browser and add a callback.<br/>
+                    <code>
+                      config.button  = {<br/>
+                      &nbsp;&nbsp;&nbsp;text : 'Update',<br/>
+                      &nbsp;&nbsp;&nbsp;onClick : function(path) {<br/>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// -- Here goes the callback --<br/>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// -- 'path' can be updated to any image or any input field<br/>
+                      &nbsp;&nbsp;&nbsp;}<br/>
+                      };
+                    </code>
+                  </li>
+                  <li>
+                    While accessing disk browser, it's possible to configure the display disks.<br/>
+                    config.disks = ['Some disk'];<br/>
+                    And at some other place, we can access browser with some other disk -<br/>
+                    config.disks = ['Some other disk'];
+                  </li>
+                </ul>
+
+                <p>
+                  One suggestion on how to access disk browser from different elements on a web page -
+                </p>
+                <ul>
+                  <li>
+                    To open a browser -<br/>
+                    <code>&lt;button data-disk-browser="true" data-disks="Images,Documents"&gt;Browse&lt;/button&gt;</code>
+
+                  </li>
+                  <li>
+                    To open a browser and update path in an input field or an image - <br/>
+                    <code>&lt;button data-disk-browser="true" data-disks="Images,Documents" data-disk-browser-btn="Update" data-update="update_url" data-update-image="image_to_update"&gt;Browse&lt;/button&gt;</code>
+                    
+                  </li>
+                </ul>
+
+                <p>
+                  And following will be code for the same -
+                </p>
+                <code>
+
+                  (function() {<br/>
+                   &nbsp;&nbsp;&nbsp;$('[data-disk-browser="true"]').on('click', function() {<br/>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var element = $(this);<br/>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var buttonText = $(this).attr('data-disk-browser-btn');<br/>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var disks = $(this).attr('data-disks');<br/>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var image = $(this).attr('data-update-image');<br/>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var inputBox = $(this).attr('data-update');<br/>
+                          
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var configParameters = {};<br/>
+
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (buttonText && (inputBox || image))  {<br/>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;configParameters.button  = {<br/>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;text : buttonText,<br/>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onClick : function(path) {<br/>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$('[data-type="'+inputBox+'"]').val(path);<br/>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$('[data-type="'+image+'"]').attr('src', path);<br/>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+                   &nbsp;&nbsp;&nbsp;};<br/>
+
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (disks) {<br/>
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;configParameters.disks = getArrayFromCSV(disks);<br/>
+                   &nbsp;&nbsp;&nbsp;}<br/>
+
+                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;browser.openBrowser(configParameters);<br/>
+                   &nbsp;&nbsp;&nbsp;});<br/>
+                  })();
+                </code>
+                <h2 id="integration-with-tinymce">
+                  Integration with tinyMCE
+                </h2>
+                <p>
+                  To add disk browser on image plugin callback -
+                </p>
+                <code>
+                  tinymce.init({<br/>
+                  &nbsp;&nbsp;selector: 'textarea#tinyMCE',<br/>
+                  &nbsp;&nbsp;paste_as_text: true,<br/>
+                  &nbsp;&nbsp;plugins: [<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;"advlist autolink link image imagetools lists anchor code fullscreen table template paste"<br/>
+                  &nbsp;&nbsp;],<br/>
+
+                  &nbsp;&nbsp;toolbar1: "bold italic underline | alignleft aligncenter alignright alignjustify | <br/>
+                  &nbsp;&nbsp;bullist numlist | outdent indent | undo redo",<br/>
+                  &nbsp;&nbsp;toolbar2: "table link unlink | image | formatselect | code | DiskBrowser",<br/>
+                  &nbsp;&nbsp;toolbar_items_size: 'small',<br/>
+                  &nbsp;&nbsp;menubar: false,<br/>
+                  &nbsp;&nbsp;paste_data_images: false,<br/>
+                  &nbsp;&nbsp;<u>file_browser_callback : tinmyceDiskBrowser</u><br/>
+                });
+                </code><br/><br/>
+                <code> 
+                function tinmyceDiskBrowser(field_id, url, type, win)<br /> 
+                {<br />
+                &nbsp; &nbsp;browser.openBrowser({<br />
+                &nbsp; &nbsp; &nbsp;disks : [<br />
+                &nbsp; &nbsp; &nbsp; &nbsp; 'Images', 'Documents'<br />
+                &nbsp; &nbsp; &nbsp;],<br />
+                &nbsp; &nbsp; &nbsp;button : {<br />
+                &nbsp; &nbsp; &nbsp; &nbsp;text : 'Update URL',<br />
+                &nbsp; &nbsp; &nbsp; &nbsp;onClick : function(path) {<br />
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;win.document.getElementById(field_id).value = path;<br />
+                &nbsp; &nbsp; &nbsp; &nbsp;}<br />
+                &nbsp; &nbsp; &nbsp; }<br />
+                &nbsp; &nbsp;});<br /> 
+                }<br /> 
+                </code>
+
+                <p>
+                  To add disk browser as a stand-alone button on tinyMCE toolbar -
+                </p>
+                <code>
+                  tinymce.init({<br/>
+                  &nbsp;&nbsp;selector: 'textarea#tinyMCE',<br/>
+                  &nbsp;&nbsp;paste_as_text: true,<br/>
+                  &nbsp;&nbsp;plugins: [<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;"advlist autolink link image imagetools lists anchor code fullscreen table template paste"<br/>
+                  &nbsp;&nbsp;],<br/>
+
+                  &nbsp;&nbsp;toolbar1: "bold italic underline | alignleft aligncenter alignright alignjustify | <br/>
+                  &nbsp;&nbsp;bullist numlist | outdent indent | undo redo",<br/>
+                  &nbsp;&nbsp;toolbar2: "table link unlink | image | formatselect | code | DiskBrowser",<br/>
+                  &nbsp;&nbsp;toolbar_items_size: 'small',<br/>
+                  &nbsp;&nbsp;menubar: false,<br/>
+                  &nbsp;&nbsp;paste_data_images: false,<br/>
+                  &nbsp;&nbsp;setup : function(editor) {<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;editor.addButton('DiskBrowser', {<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;text: 'Disk Browser',<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon: false,<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onclick: function () {<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;browser.openBrowser({<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;disks : [<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'Images', 'Documents'<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;button : {<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;text : 'Update URL',<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onClick : function(url) {<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;editor.insertContent('&lt;img src="'+url+'"/&gt;');<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;});<br/>
+                  &nbsp;&nbsp;}<br/>
+                });
+                </code>
+                <h2 id="integration-with-ckeditor">
+                  Integration with CKEditor
+                </h2>
+                <p>
+                  Adding disk browser as a button
+                </p>
+                <code>
+                editor.addCommand("diskBrowserCommand", {<br />&nbsp; &nbsp; exec: function(edt) {<br />&nbsp; &nbsp; browser.openBrowser({<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; disks : [<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 'Images', 'Documents'<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ],<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; button : {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;text : 'Update URL',<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;onClick : function(url) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; edt.insertHtml('&lt;img src="'+url+'" alt="" /&gt;');<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}<br />&nbsp; &nbsp; });<br />&nbsp; }<br /> });<br /> editor.ui.addButton('SuperButton', {<br />&nbsp; &nbsp;label: "Disk browser",<br />&nbsp; &nbsp;command: 'diskBrowserCommand',<br />&nbsp; &nbsp;toolbar: 'insert',<br />&nbsp; &nbsp;icon: '/icon.png'<br /> });
+                </code><br/>
+
+                <p>
+                  Adding disk browser as a callback on image browser
+                </p>
+                <code>
+                  CKEDITOR.on('dialogDefinition', function (event)<br /> {<br />&nbsp; &nbsp; &nbsp;var dialogDefinition = event.data.definition;<br />&nbsp; &nbsp; &nbsp;var tabCount = dialogDefinition.contents.length;<br />&nbsp; &nbsp; &nbsp;for (var i = 0; i &lt; tabCount; i++) {<br />&nbsp; &nbsp; &nbsp; &nbsp; var browseButton = dialogDefinition.contents[i].get('browse');<br />&nbsp; &nbsp; &nbsp; &nbsp; var diskBrowserInstance = new openDiskBrowser(dialogDefinition.contents[i]);<br />&nbsp; &nbsp; &nbsp; &nbsp; if (browseButton !== null) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;browseButton.hidden = false;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;browseButton.onClick = diskBrowserInstance;<br />&nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp;}<br /> });<br /> <br /> function openDiskBrowser(editorContent)<br /> {<br />&nbsp; &nbsp; return function() {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;browser.openBrowser({<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; disks : [<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'Images', 'Documents'<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ],<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;button : {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;text : 'Choose',<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;onClick : function(url) {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; var inputField = CKEDITOR.dialog.getCurrent().getContentElement( editorContent.id, 'txtUrl' ).getInputElement().$;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $(inputField).val(url).trigger('change');<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (editorContent.id == 'info') {<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; var preview = CKEDITOR.dialog.getCurrent().getContentElement( 'info', 'htmlPreview' ).getInputElement().$;<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $(preview).find('img').attr('src', url);<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $(preview).find('img').removeAttr('style');<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}<br />&nbsp; &nbsp; &nbsp; &nbsp; });<br />&nbsp; &nbsp; &nbsp;};<br /> }
+                </code>
+                <br/>
+                <br/>
+                <br/>
+            </div>
+            <div class="tab-pane fade" id="authentication">
                 
             </div>
         </div>  

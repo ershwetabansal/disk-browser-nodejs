@@ -51,9 +51,10 @@ browser.setup({
     files: {
         list: '/disk/files',
         destroy : '/disk/file/destroy',
+        update : '/disk/file/update',
         upload: {
             url: '/disk/file/store',
-            params:[]
+            params:[{name : 'name', label : 'File Name'}]
         },
         thumbnail: {
             show : true,
@@ -111,21 +112,6 @@ browser.setup({
             browser.openBrowser(configParameters);
         });
 })();
-
-function tinmyceDiskBrowser(field_id, url, type, win)
-{
-    browser.openBrowser({
-        disks : [
-            'Images', 'Documents'
-        ],
-        button : {
-            text : 'Update URL',
-            onClick : function(path) {
-                win.document.getElementById(field_id).value = path;
-            }
-        }
-    });
-}
 
 function accessDiskBrowser(callback, disks)
 {

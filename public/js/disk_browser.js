@@ -56,13 +56,6 @@ browser.setup({
             url: '/disk/file/store',
             params:[{name : 'name', label : 'File Name'}]
         },
-        thumbnail: {
-            show : true,
-            directory : '/thumbnails',
-            path : '',
-            prefix : '',
-            suffix : ''
-        },
         size_unit : 'KB'
     },
     http : {
@@ -82,7 +75,6 @@ browser.setup({
             return (message == '') ? 'Error encountered. ' : message ;
         }
     },
-    authentication : "session"
 });
 
 (function() {

@@ -59,21 +59,35 @@
                     });
                     </code>
                   </li>
-                </ul>
-                
-                <ul class="list-bullets">
-                  <li>Otherwise, following task can be created in gulpfile.js<br/>
-                  <code>
-                  gulp.task('copy', function() {<br />
-                   &nbsp;&nbsp;&nbsp;return gulp.src('node_modules/disk-browser/dist/**/*')<br />
-                   &nbsp;&nbsp;&nbsp;.pipe(gulp.dest('public/app/build/disk-browser'));<br />
-                  });
-                  </code>
-                  </li>
-                </ul>
-                
+                  <li>If not using elixir, following task can be created in gulpfile.js to copy the files -<br/>
+                    <code>
+                    gulp.task('copy', function() {<br />
+                     &nbsp;&nbsp;&nbsp;return gulp.src('node_modules/disk-browser/dist/**/*')<br />
+                     &nbsp;&nbsp;&nbsp;.pipe(gulp.dest('public/app/build/disk-browser'));<br />
+                    });
+                    </code>
 
-                <p>Do remember to replace node_modules with bower_components if using bower. Similar copy command can be used in grunt as well.</p>
+                    <p>Do remember to replace node_modules with bower_components if using bower. Similar copy command can be used in grunt as well.</p>
+                  </li>
+                  <li>
+                    For UI, disk browser has a dependency on -<br/>
+                    <code>
+                      &lt;link href="'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'" rel='stylesheet' type='text/css'&gt;<br/>
+    &lt;link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"&gt;<br/>
+    &lt;link href="/app/build/diskbrowser/css/disk-browser.css" rel="stylesheet"&gt;
+                    </code>
+                  </li>
+                  <li>
+                    For javascript, please add jquery and bootstrap -<br/>
+                    <code>
+                      &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"&gt;&lt;/script&gt;<br/>
+    &lt;script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.js"&gt;&lt;/script&gt;<br/>
+    &lt;script src="/app/build/diskbrowser/js/disk-browser.js"&gt;&lt;/script&gt;<br/>
+    &lt;script src="disk_browser.js">&lt;/script&gt;
+                    </code>
+
+                  </li>
+                </ul>  
                 <br/>
                 <br/>
                 <br/>
@@ -599,7 +613,30 @@
                 <br/>
             </div>
             <div class="tab-pane fade" id="authentication">
-                
+            <p>
+              While I have added the security tab in the end, but this is the most important aspect when it comes to file handling or disk managing. Here are few ways to keep your disk browser secured -
+            </p>
+            <ul class="list-bullets">
+                <li>
+                  First and foremost, is the authentication. Make sure to add any kind of authentication for accessing disk manager. Off the shelf, this package provides few configurations -
+                  <ol>
+                    <li>
+                      Session authentication
+                    </li>
+                    <li>
+                      CSRF authentication used in Laravel PHP (<a href="https://laravel.com/docs/5.3/csrf">https://laravel.com/docs/5.3/csrf</a>) -<br/>
+                      To configure this, add below configuration parameter in client -<br/> 
+                      <code>
+                        configuration.http.headers = 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content');
+                      </code><br/>
+                      And make sure that <code>&lt;meta name="csrf-token" content="{{ csrf_token() }}"&gt;</code> is added to the html page.
+                    </li>
+                  </ol>
+                </li>
+                <li>
+                  Do not allow to upload any executable files. This can be configured using 'allowed_extensions' parameter in client side configuration file. This will apply a restriction on the allowed extensions on a given disk for browsing or uploading.
+                </li>
+            </ul>
             </div>
         </div>  
     </div>
